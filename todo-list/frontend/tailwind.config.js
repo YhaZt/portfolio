@@ -6,5 +6,12 @@ module.exports = {
   plugins: [
       require('flowbite/plugin')
   ],
-  theme: {}
+    theme: {
+    extend: {
+      textColor: {
+        'black': '#000',
+      },
+    },
+  },
+  
 }
