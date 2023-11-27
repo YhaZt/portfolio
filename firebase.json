@@ -1,0 +1,12 @@
+{
+    "hosting": {
+      "public": "./todo-list/frontend/dist",  
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  }
+  
