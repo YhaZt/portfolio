@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import firebaseApp from '../firebase';
+import firebaseApp from "../firebase";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -9,45 +9,45 @@ const router = createRouter({
     { path: "/forgot-password", component: () => import("../User/Forgot.vue") },
     {
       path: "/home",
-      name: 'home',
+      name: "home",
       component: () => import("../Home/Home.vue"),
       meta: {
         requiresAuth: true,
       },
     },
-    
   ],
 });
 
 const getCurrentUser = () => {
-    return new Promise((resolve, reject) => {
-      const removeListener = onAuthStateChanged(
-        getAuth(firebaseApp), 
-        (user) => {
-          removeListener();
-          resolve(user);
-        },
-        reject
-      );
-    });
-  };
-
-router.beforeEach(async (to, from, next) => {
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
-      try {
-        const user = await getCurrentUser();
-        if (user) {
-          next();
-        } else {
-          next("/");
-        }
-      } catch (error) {
-        console.error("Error checking authentication:", error);
-        next("/");
-      }
-    } else {
-      next();
-    }
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(firebaseApp),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      reject
+    );
   });
-  
+};
+router.beforeEach(async (to, from, next) => {
+  console.log("Before navigation guard");
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    try {
+      const user = await getCurrentUser();
+      if (user) {
+        next();
+      } else {
+        next({ path: "/login", replace: true });
+      }
+    } catch (error) {
+      console.error("Error checking authentication:", error);
+      next("/");
+    }
+  } else {
+    next();
+  }
+  console.log("After navigation guard");
+});
+
 export default router;

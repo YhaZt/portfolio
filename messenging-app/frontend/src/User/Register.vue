@@ -79,14 +79,22 @@ const googleSignIn = () => {
 
   signInWithPopup(getAuth(), provider)
     .then((result) => {
-      // The user's display name is available as result.user.displayName
-      router.push("/home");
+      const user = result.user; 
+      if (user) {
+        const uid = user.uid;
+        console.log("UID:", uid);
+        set(dbRef(db, `user/${uid}`), {
+          username: user.displayName, 
+        });
+      }
+      router.push({ path: "/home", query: { displayName: user.displayName } }); 
     })
     .catch((error) => {
       console.error("Google sign-in error:", error.message);
       console.error("Full error object:", error);
     });
 };
+
 </script>
 
 <template>
@@ -114,11 +122,11 @@ const googleSignIn = () => {
                 autocomplete="off"
                 type="text"
                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                id="exampleFormControlInput2"
+                id="exampleFormControlInput1"
                 placeholder="Email address"
               />
               <label
-                for="exampleFormControlInput2"
+                for="exampleFormControlInput1"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                 >Username
               </label>
@@ -148,11 +156,11 @@ const googleSignIn = () => {
                 autocomplete="off"
                 type="password"
                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                id="exampleFormControlInput22"
+                id="exampleFormControlInput3"
                 placeholder="Password"
               />
               <label
-                for="exampleFormControlInput22"
+                for="exampleFormControlInput3"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                 >Password
               </label>
@@ -164,11 +172,11 @@ const googleSignIn = () => {
                 autocomplete="off"
                 type="password"
                 class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                id="exampleFormControlInput22"
+                id="exampleFormControlInput4"
                 placeholder="Password"
               />
               <label
-                for="exampleFormControlInput22"
+                for="exampleFormControlInput4"
                 class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                 >Confirm Password
               </label>
